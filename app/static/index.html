@@ -78,7 +78,7 @@ footer{margin-top:28px;text-align:center;color:var(--muted);font-size:.85rem}
 <body>
 <header class="hero"><div class="wrap">
   <h1>Apex Operations</h1>
-  <p>Incidents aur ops tasks ek jagah. Service ki sehat neeche live dikhti hai.</p>
+  <p>Incidents and ops tasks in one place. Live service health is displayed below.</p>
   <div class="board">
     <div class="chip"><i class="dot" id="dApi"></i><span id="tApi">API checking…</span></div>
     <div class="chip"><i class="dot" id="dDb"></i><span id="tDb">Database checking…</span></div>
@@ -95,7 +95,7 @@ footer{margin-top:28px;text-align:center;color:var(--muted);font-size:.85rem}
       <label for="title">Title</label>
       <input id="title" placeholder="e.g. Nginx returning 502" maxlength="120" required>
       <label for="desc">Details</label>
-      <textarea id="desc" placeholder="Kya hua, kab se, kahan?"></textarea>
+      <textarea id="desc" placeholder="Brief Of Incident"></textarea>
       <label for="prio">Priority</label>
       <select id="prio">
         <option value="low">Low</option><option value="medium" selected>Medium</option>
@@ -165,7 +165,7 @@ function render(){
       ${t.description?`<p>${esc(t.description)}</p>`:''}
       <div class="meta">#${t.id} · ${t.priority} priority · ${new Date(t.created_at+'Z').toLocaleString()}</div>
     </article>`).join('')
-    : '<div class="empty">Koi ticket nahi. Left side form se pehla ticket banao.</div>';
+    : '<div class="empty">No ticket available, add ticket from form.</div>';
 }
 
 $('filters').onclick = e => { if(e.target.dataset.f){ filter=e.target.dataset.f; render(); } };

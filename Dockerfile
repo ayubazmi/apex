@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-# Logs turant dikhein, .pyc files na bane
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
@@ -8,17 +8,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Pehle sirf requirements copy: isse Docker layer cache use karta hai,
-# code badalne par dependencies dobara install nahi hoti
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Version image ke andar bake hoga (rollback demo ke liye important)
+
 ARG APP_VERSION=1.0.0
 ENV APP_VERSION=${APP_VERSION} \
     APP_ENV=production
 
-# Non-root user banao
+# Non-root user 
 RUN groupadd --system app && useradd --system --gid app --no-create-home app
 
 COPY app ./app
