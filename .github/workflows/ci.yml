@@ -141,6 +141,7 @@ jobs:
         run: |
           cat > .env <<EOF
           APP_ENV=${{ secrets.APP_ENV }}
+          APP_IMAGE=${{ secrets.APP_IMAGE }}
           DATABASE_URL=${{ secrets.DATABASE_URL }}
           GRAFANA_PASSWORD=${{ secrets.GRAFANA_PASSWORD }}
           LOG_LEVEL=${{ secrets.LOG_LEVEL }}
