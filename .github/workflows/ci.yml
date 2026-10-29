@@ -120,6 +120,37 @@ jobs:
         with:
           clean: false
 
+      - name: Validate required secrets
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GRAFANA_PASSWORD: ${{ secrets.GRAFANA_PASSWORD }}
+          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        run: |
+          missing=0
+          for v in APP_ENV DATABASE_URL GRAFANA_PASSWORD LOG_LEVEL POSTGRES_DB POSTGRES_PASSWORD POSTGRES_USER; do
+            [ -z "${!v:-}" ] && { echo "❌ Missing secret: $v"; missing=1; }
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          echo "✅ All 7 secrets present"
+
+      - name: Write .env from secrets
+        run: |
+          cat > .env <<EOF
+          APP_ENV=${{ secrets.APP_ENV }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          GRAFANA_PASSWORD=${{ secrets.GRAFANA_PASSWORD }}
+          LOG_LEVEL=${{ secrets.LOG_LEVEL }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          EOF
+          chmod 600 .env
+          echo "✅ .env written ($(wc -l < .env) vars)"
+
       - name: Remember current version
         run: echo "PREV_VERSION=$(cat .deploy/current 2>/dev/null || true)" >> "$GITHUB_ENV"
 
