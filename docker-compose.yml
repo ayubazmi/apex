@@ -19,7 +19,7 @@ services:
       context: .
       args:
         APP_VERSION: ${APP_VERSION:-1.0.0}
-    image: apex-ops-api:${APP_VERSION:-1.0.0}   # versioned image (rollback ke liye)
+    image: ${APP_IMAGE:-apex-ops-api}:${APP_VERSION:-1.0.0}   # versioned image (rollback ke liye)
     environment:
       APP_ENV: staging          # Dockerfile ka "production" override
       APP_VERSION: ${APP_VERSION:-1.0.0}
