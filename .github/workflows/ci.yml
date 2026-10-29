@@ -116,19 +116,14 @@ jobs:
       group: deploy-kali
       cancel-in-progress: false
     steps:
-      - name: Fix .deploy ownership
-        working-directory: /root/apex
-        run: |
-          mkdir -p .deploy
-          sudo chown -R "$(id -u):$(id -g)" .deploy
-          chmod -R u+rwX .deploy
+      - uses: actions/checkout@v4
+        with:
+          clean: false
 
       - name: Remember current version
-        working-directory: /root/apex
         run: echo "PREV_VERSION=$(cat .deploy/current 2>/dev/null || true)" >> "$GITHUB_ENV"
 
       - name: Deploy new version
-        working-directory: /root/apex
         run: bash scripts/deploy.sh "$APP_VERSION"
 
       - name: Verify running version
@@ -136,7 +131,6 @@ jobs:
 
       - name: Auto-rollback on failure
         if: failure()
-        working-directory: /root/apex
         run: |
           if [ -n "$PREV_VERSION" ]; then
             bash scripts/rollback.sh "$PREV_VERSION"
