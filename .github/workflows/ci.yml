@@ -107,7 +107,7 @@ jobs:
             ${{ env.IMAGE }}:${{ github.sha }}
           build-args: APP_VERSION=${{ env.APP_VERSION }}
           cache-from: type=gha
-  cd:
+    cd:
     name: Deploy to Kali VM
     needs: deploy
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
@@ -116,6 +116,13 @@ jobs:
       group: deploy-kali
       cancel-in-progress: false
     steps:
+      - name: Fix .deploy ownership
+        working-directory: /root/apex
+        run: |
+          mkdir -p .deploy
+          sudo chown -R "$(id -u):$(id -g)" .deploy
+          chmod -R u+rwX .deploy
+
       - name: Remember current version
         working-directory: /root/apex
         run: echo "PREV_VERSION=$(cat .deploy/current 2>/dev/null || true)" >> "$GITHUB_ENV"
