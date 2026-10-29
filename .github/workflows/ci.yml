@@ -132,7 +132,7 @@ jobs:
         run: bash scripts/deploy.sh "$APP_VERSION"
 
       - name: Verify running version
-        run: curl -fs localhost:8000/health | grep -q "\"version\":\"$APP_VERSION-BROKEN\""
+        run: curl -fs localhost:8000/health | grep -q "\"version\":\"$APP_VERSION\""
 
       - name: Auto-rollback on failure
         if: failure()
