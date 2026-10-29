@@ -4,7 +4,7 @@ import os
 def test_health_returns_ok(client):
     r = client.get("/health")
     assert r.status_code == 200
-    assert r.json()["status"] == "BROKEN"
+    assert r.json()["status"] == "ok"
 
 
 def test_ready_checks_database(client):
