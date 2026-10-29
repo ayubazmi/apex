@@ -107,3 +107,32 @@ jobs:
             ${{ env.IMAGE }}:${{ github.sha }}
           build-args: APP_VERSION=${{ env.APP_VERSION }}
           cache-from: type=gha
+  cd:
+    name: Deploy to Kali VM
+    needs: deploy
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: self-hosted
+    concurrency:
+      group: deploy-kali
+      cancel-in-progress: false
+    steps:
+      - name: Remember current version
+        working-directory: /root/apex
+        run: echo "PREV_VERSION=$(cat .deploy/current 2>/dev/null || true)" >> "$GITHUB_ENV"
+
+      - name: Deploy new version
+        working-directory: /root/apex
+        run: bash scripts/deploy.sh "$APP_VERSION"
+
+      - name: Verify running version
+        run: curl -fs localhost:8000/health | grep -q "\"version\":\"$APP_VERSION\""
+
+      - name: Auto-rollback on failure
+        if: failure()
+        working-directory: /root/apex
+        run: |
+          if [ -n "$PREV_VERSION" ]; then
+            bash scripts/rollback.sh "$PREV_VERSION"
+          else
+            echo "Koi purana version nahi, rollback skip"
+          fi
