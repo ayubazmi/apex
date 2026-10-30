@@ -19,7 +19,8 @@ curl localhost:8000/health
 
 Without Docker: create a venv, `pip install -r requirements-dev.txt`, run `uvicorn app.main:app --port 8000` (SQLite). Tests: `flake8 .` and `pytest -v` (8 tests; `DEMO_FAIL=true` triggers the intentional failure). Compose waits for the DB healthcheck before starting the app, and data survives `docker compose down` because it lives in the `pgdata` volume.
 
-&#91;image: Compose stack healthy: app 1.0.6 and Postgres\]
+<img width="1662" height="120" alt="image" src="https://github.com/user-attachments/assets/81e50b67-9522-4b77-bd5a-b0764c5e5fa1" />
+
 
 *Evidence: `docker ps` shows the versioned image `ghcr.io/ayubazmi/apex:1.0.6` and `postgres:16-alpine`, both healthy.*
 
