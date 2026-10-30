@@ -35,11 +35,13 @@ Without Docker: create a venv, `pip install -r requirements-dev.txt`, run `uvico
 
 Intentional failure: a manual run with `demo_fail`  test job, and build, deploy and cd are skipped. This is the evidence that a failing test blocks deployment.&#32;
 
-&#91;image: CI run 22: all jobs green, including deploy to the Kali VM\]
+<img width="1774" height="641" alt="image" src="https://github.com/user-attachments/assets/9b9c1739-b5bf-4e45-83da-cfe99d7c38fa" />
+
 
 *Evidence, successful deployment: CI run #22 on `main`. Lint and test, Build and scan image, Publish versioned image and Deploy to Kali VM all passed (8m 9s).*
 
-&#91;image: CI run 23: Lint and test failed, later jobs skipped\]
+<img width="1760" height="529" alt="image" src="https://github.com/user-attachments/assets/94fc8ec6-a0f4-4380-a171-3ec185c1ddb9" />
+
 
 *Evidence, intentional failure: CI run #23 (commit "Update test\_api.py"). Lint and test failed, so Build and scan image, Publish versioned image and Deploy to Kali VM were skipped. Nothing was deployed.*
 
@@ -59,11 +61,13 @@ Manual equivalent: `export APP_VERSION=1.0.5; docker compose up -d --no-build; c
 - **Metrics:** `/metrics` is scraped every 15 s by Prometheus, shown in a Grafana dashboard (status, request rate, 5xx ratio, latency, availability). Prometheus and Grafana run from a separate compose file with persistent volumes.
 - **Alert proposal:**
 
-&#91;image: Structured JSON request logs\]
+<img width="1762" height="274" alt="image" src="https://github.com/user-attachments/assets/06d4f483-f8c7-4695-9b6b-89596c784044" />
+
 
 *Evidence: structured JSON logs, one line per request with `request_id`, method, path, status and `duration_ms`.*
 
-&#91;image: Grafana dashboard\]
+<img width="1865" height="585" alt="image" src="https://github.com/user-attachments/assets/020a1b6b-c296-47f2-9799-8736f13f065f" />
+
 
 *Evidence: Grafana dashboard with total requests, availability (up), request rate and 5xx errors.*
 
@@ -83,11 +87,13 @@ Alerts are a proposal; notification would need Alertmanager.
 4. Cause: DB container stopped, so `SELECT 1` fails.
 5. Fix: `docker compose start db`; `/ready` returns 200 and existing tickets are intact.
 
-&#91;image: Detection: /ready returns 503 and readiness\_failed log\]
+<img width="1885" height="353" alt="image" src="https://github.com/user-attachments/assets/96a76390-5940-4a02-a395-19091c3ace38" />
+
 
 *Evidence, detect and investigate: `/ready` returns 503 `not_ready` with the database stopped, and the log shows `readiness_failed`.*
 
-&#91;image: Recovery: /ready returns 200\]
+<img width="775" height="312" alt="image" src="https://github.com/user-attachments/assets/7f9c9774-9ad9-446e-82d1-fc2a51727ff9" />
+
 
 *Evidence, fix: after `docker compose start db`, `/ready` returns 200 with `database: up` on version 1.0.6.*
 
@@ -108,7 +114,8 @@ Alerts are a proposal; notification would need Alertmanager.
 - **Scanning:** Trivy scans the image (OS and Python packages) and blocks on CRITICAL findings; dependency versions and the Trivy action are pinned.
 - **Known gaps:** no API authentication or TLS (local demo), writable container filesystem, no Dependabot or image signing yet, and the self-hosted runner runs as root on a lab VM only.
 
-&#91;image: Non-root container user\]
+<img width="530" height="74" alt="image" src="https://github.com/user-attachments/assets/bccdb7a5-1d4a-4de3-8c2b-1bab57f3d880" />
+
 
 *Evidence: `docker exec apex-app-1 whoami` returns `app`, so the container does not run as root.*
 
